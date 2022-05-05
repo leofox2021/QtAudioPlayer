@@ -1,0 +1,30 @@
+01/04/2022 (COMPLETE)
+1. Create separate .py files for playlist methods and playlist name creation
+2. Create a .ui file for assigning a name for a playlist
+3. Write methods for opening, creating and displaying playlists
+4.
+
+
+19/04/2022 (COMPLETE)
+1. Implement opening all playlist in the respective directory
+2. Fix all the bugs in saving playlist method
+3. Fix the autoForward function to make it work properly
+
+
+01/05/2022
+1. Implement a context menu by right clicking entries in ListView
+  a. Create separate files for each context menu
+  b. Write functional code
+  c. Connect actions to mouse clicks
+
+2. Create a shuffled play function
+3. Create a looped playback function
+4. Draw icons for the following buttons:
+  - Play
+  - Stop
+  - Pause
+  - Add playlist
+  - Next
+  - Previous
+
+5. Create warning pop-ups instead of info bar (CANCELED)
