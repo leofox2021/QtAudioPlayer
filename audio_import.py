@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QFileDialog
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtGui import QPixmap
 from mutagen import File
 import random
 
@@ -9,6 +11,7 @@ class AudioFileImport:
         self.playlist = playlist
         self.current_song = None
         self.filenames = ''
+        self.pixmap = QPixmap()
 
 
     #Import selected files
@@ -19,6 +22,13 @@ class AudioFileImport:
     #Add selected songs to "all_songs" list
     #and to the playlist
     def addToAllSongs(self, filenames):
+
+        #Set the last row in playlist
+        count = 0
+        if self.playlist.count() != 0:
+            count = self.playlist.count()
+        else:
+            pass
 
         #Record opened files into 'directory' variable
         if filenames == None:
@@ -51,6 +61,26 @@ class AudioFileImport:
                     #Final playlist name
 
                 self.playlist.addItem(f'{artist} - {title}')
+
+
+                #Avoid crashing due to absent covers
+                try:
+                    file = File(var2)
+                    for tag in file.tags.values():
+                        if tag.FrameID == 'APIC':
+                            self.pixmap.loadFromData(tag.data)
+                            break
+                except Exception:
+                    self.playlist.item(count).setIcon(QtGui.QIcon('icons/no_icon.png'))
+                else:
+                    file = File(var2)
+                    for tag in file.tags.values():
+                        if tag.FrameID == 'APIC':
+                            self.pixmap.loadFromData(tag.data)
+                            break
+                    self.playlist.item(count).setIcon(QtGui.QIcon(self.pixmap))
+
+                count +=1
 
 
     #Import selected files and add them into playlist
