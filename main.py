@@ -3,7 +3,7 @@ from mutagen.id3 import ID3
 from mutagen import File
 from PyQt5 import QtGui, QtCore, uic
 from PyQt5.QtCore import QEvent
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMenuBar
 from PyQt5.QtMultimedia import QMediaPlayer
 from media_player import MediaPlayer
 from audio_import import AudioFileImport
@@ -45,6 +45,9 @@ volume_value = form.label_2 #Volume value label
 player = QMediaPlayer() #Player
 
 
+#Menu
+preferences = form.actionPreferences
+
 #Variables
 all_songs = []
 
@@ -52,11 +55,11 @@ all_songs = []
 #Assigning icons
 #PLAY
 play.setIcon(QtGui.QIcon('icons/play.png'))
-play.setIconSize(QtCore.QSize(24,24))
+play.setIconSize(QtCore.QSize(12,12))
 
 #STOP
 stop.setIcon(QtGui.QIcon('icons/stop.png'))
-stop.setIconSize(QtCore.QSize(24,24))
+stop.setIconSize(QtCore.QSize(12,12))
 
 #PREVIOUS
 prev.setIcon(QtGui.QIcon('icons/backward.png'))
@@ -106,6 +109,7 @@ z = PlaylistImport(all_playlists, all_songs, playlist, info_bar)
 z.displayPlaylists()
 
 
+preferences.triggered.connect(lambda: print('FUCKING ASS HOLE'))
 #Buttons
 play.clicked.connect(x.playSong)
 stop.clicked.connect(x.stopSong)
