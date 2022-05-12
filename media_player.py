@@ -52,21 +52,21 @@ class MediaPlayer:
 
             self.isplayling = True
             self.play.setIcon(QtGui.QIcon('icons/pause.png'))
-            self.play.setIconSize(QtCore.QSize(24,24))
+            self.play.setIconSize(QtCore.QSize(14,14))
             self.volume.setValue(self.player.volume())
             self.volume_value.setText(f'{self.volume.value()}')
         else:
             self.player.pause()
             self.isplayling = False
             self.play.setIcon(QtGui.QIcon('icons/play.png'))
-            self.play.setIconSize(QtCore.QSize(24,24))
+            self.play.setIconSize(QtCore.QSize(12,12))
 
 
     #To stop song from playings
     def stopSong(self):
         self.player.stop()
         self.play.setIcon(QtGui.QIcon('icons/play.png'))
-        self.play.setIconSize(QtCore.QSize(24,24))
+        self.play.setIconSize(QtCore.QSize(12,12))
         self.timer_display.setText(str(time.strftime('%M:%S', time.gmtime(0))))
 
 
@@ -102,8 +102,6 @@ class MediaPlayer:
                 print('the playlist has FUCKING ENDED!!!!')
                 self.stopSong()
             else:
-                print(self.playlist.currentRow())
-                print(len(self.all_songs))
                 self.current_song = self.imp.nextTrack()
                 self.initializePlayer()
 
@@ -114,8 +112,11 @@ class MediaPlayer:
             self.current_song = self.imp.shuffledMode()
             self.initializePlayer()
         else:
-            self.current_song = self.imp.previousTrack()
-            self.initializePlayer()
+            if self.playlist.currentRow() == -1:
+                print('What the fuck are you doing, man?')
+            else:
+                self.current_song = self.imp.previousTrack()
+                self.initializePlayer()
 
 
     #Change volume by tweaking the dial
@@ -141,7 +142,6 @@ class MediaPlayer:
             self.slider.setValue(self.player.position())
 
         else:
-            #print("You're all fucked up")
             pass
 
 
@@ -160,14 +160,18 @@ class MediaPlayer:
     #Change position by omving the slider
     def changePosition(self):
         #If moved all the way to the left, song starts again
-        if self.slider.value() <= 2000:
-            self.stopSong()
-            self.playSong()
-        #If moved all the way to the right, song stops
-        elif self.slider.value() == self.slider.maximum():
-            self.nextTrack()
+        if self.player.state == 'Stopped':
+            self.slider.setValue(0)
         else:
-            self.player.setPosition(self.slider.value() - 1)
+            if self.slider.value() <= 2000:
+                self.stopSong()
+                self.playSong()
+            #If moved all the way to the right, song stops
+            elif self.slider.value() == self.slider.maximum():
+                self.nextTrack()
+                self.slider.setSliderDown(False)
+            else:
+                self.player.setPosition(self.slider.value() - 1)
 
 
     #Read and display all tags
