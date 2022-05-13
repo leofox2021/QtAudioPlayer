@@ -28,12 +28,22 @@ class PlaylistImport:
         print(self.path)
 
         for var in in_path:
-            file = open(self.path + var)
-            q = len(file.read().splitlines())
-            self.playlists.append(f'{self.path}{var}')
-            self.all_playlists.addItem(f'{var[:-4]} ({q})')
-            file.close()
-            print(var)
+
+            try:
+                file = open(self.path + var)
+                q = len(file.read().splitlines())
+            except UnicodeDecodeError:
+                file.close()
+                print('This playlist cannot be opened.')
+                print('It will be deleted immediately.')
+                os.remove(self.path + var)
+            else:
+                file = open(self.path + var)
+                q = len(file.read().splitlines())
+                self.playlists.append(f'{self.path}{var}')
+                self.all_playlists.addItem(f'{var[:-4]} ({q})')
+                file.close()
+                print(var)
 
 
     #Clear all songs displayed
@@ -103,5 +113,27 @@ class PlaylistImport:
         self.y.button_box.accepted.connect(openFile)
 
 
-#ROADMAP:
-#Import playlists from a file
+    #Update an existing playlist
+    def updatePlaylist(self):
+        #To avoid carshing due to playlist not being selected
+        try:
+            x = self.all_playlists.currentItem().text()
+        except AttributeError:
+            print("Please select your playlist first.")
+        else:
+            x = self.all_playlists.currentItem().text()
+
+            #Remove the old versiong of playlist
+            #Otherwise 2 versions will be created
+            print(f'{self.path}{x[:-4]}.m3u')
+            os.remove(f'{self.path}{x[:-4]}.m3u')
+            file = open(f'{self.path}{x[:-4]}.m3u', 'w+', encoding="utf-8")
+
+            for var in self.all_songs:
+                print(var)
+                file.write(var + '\n')
+
+            file.close()
+            #self.playlists.clear()
+            #self.all_playlists.clear()
+            self.displayPlaylists()
