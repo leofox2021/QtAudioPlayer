@@ -135,12 +135,11 @@ class MediaPlayer:
 
     #Play next song when player reaches the end
     def autoForward(self):
-        if self.slider.value() >= self.duration:
+        if self.player.position() >= self.duration:
             print('Action triggesed!!!!!!!!!!!!')
             #self.duration = 0
             self.nextTrack()
             self.slider.setValue(self.player.position())
-
         else:
             pass
 
@@ -165,7 +164,7 @@ class MediaPlayer:
         else:
             if self.slider.value() <= 2000:
                 self.stopSong()
-                self.playSong()
+                self.currentTrack()
             #If moved all the way to the right, song stops
             elif self.slider.value() == self.slider.maximum():
                 self.nextTrack()
