@@ -28,10 +28,11 @@ stop = form.pushButton_2 #Stop button
 openfile = form.pushButton_3 #Open file dialog button
 prev = form.pushButton_4 #Play previous track
 next = form.pushButton_5 #Play next track
-open_playlist = form.pushButton_6 #Open playlist button
+remove_song = form.pushButton_6 #Remove song from a playlist
 save_to_playlist = form.pushButton_7 #Create a new playlist
 clear = form.pushButton_8 #Clear button
 shuffled = form.pushButton_9 #Shuffle button
+update_playlist = form.pushButton_10 #Update playlist
 cover = form.label_3 #Album art
 title = form.label #Song title
 artist = form.label_4 #Song artist
@@ -119,7 +120,8 @@ next.clicked.connect(x.nextTrack)
 openfile.clicked.connect(y.importFromFiles)
 save_to_playlist.clicked.connect(z.createPlaylist)
 clear.clicked.connect(z.clearPlaylist)
-
+remove_song.clicked.connect(y.removeTrack)
+update_playlist.clicked.connect(z.updatePlaylist)
 
 #Playlist
 playlist.itemDoubleClicked.connect(x.currentTrack)
