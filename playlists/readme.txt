@@ -1,0 +1,1 @@
+This is the default location for your .m3u playlists to be stored. 
