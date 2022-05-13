@@ -149,3 +149,9 @@ class AudioFileImport:
         self.current_song = self.playlist.currentRow()
         print(self.current_song)
         return self.current_song
+
+
+    def removeTrack(self):
+        x = self.playlist.currentRow()
+        self.all_songs.pop(x)
+        self.playlist.takeItem(x)
