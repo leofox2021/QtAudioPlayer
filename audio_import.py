@@ -152,6 +152,10 @@ class AudioFileImport:
 
 
     def removeTrack(self):
-        x = self.playlist.currentRow()
-        self.all_songs.pop(x)
-        self.playlist.takeItem(x)
+        try:
+            x = self.playlist.currentRow()
+            self.all_songs.pop(x)
+        except IndexError:
+            print('You have no song in a playlist!')
+        else:
+            self.playlist.takeItem(x)
