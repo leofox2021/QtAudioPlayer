@@ -1,0 +1,2 @@
+style = fusion
+theme = dark
