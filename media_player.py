@@ -9,7 +9,7 @@ from audio_import import AudioFileImport
 class MediaPlayer:
 
     #Class constructor
-    def __init__(self, player, timer_display, play, title, artist, album, slider, volume, volume_value, cover, playlist, all_songs, shuffled):
+    def __init__(self, player, timer_display, play, title, artist, album, slider, volume, volume_value, cover, playlist, all_songs, shuffled, current_theme):
 
         #GUI
         self.timer_display = timer_display
@@ -31,6 +31,7 @@ class MediaPlayer:
         self.duration_info = None
         self.duration = None
         self.isplayling = False
+        self.current_theme = current_theme
 
         #Attributes
         self.title = title
@@ -51,14 +52,20 @@ class MediaPlayer:
                 self.player.play()
 
             self.isplayling = True
-            self.play.setIcon(QtGui.QIcon('icons/pause.png'))
+            if self.current_theme == 'light':
+                self.play.setIcon(QtGui.QIcon('icons/pause.png'))
+            else:
+                self.play.setIcon(QtGui.QIcon('icons/pause_dark.png'))
             self.play.setIconSize(QtCore.QSize(14,14))
             self.volume.setValue(self.player.volume())
             self.volume_value.setText(f'{self.volume.value()}')
         else:
             self.player.pause()
             self.isplayling = False
-            self.play.setIcon(QtGui.QIcon('icons/play.png'))
+            if self.current_theme == 'light':
+                self.play.setIcon(QtGui.QIcon('icons/play.png'))
+            else:
+                self.play.setIcon(QtGui.QIcon('icons/play_dark.png'))
             self.play.setIconSize(QtCore.QSize(12,12))
 
 
@@ -135,13 +142,19 @@ class MediaPlayer:
 
     #Play next song when player reaches the end
     def autoForward(self):
-        if self.player.position() >= self.duration:
-            print('Action triggesed!!!!!!!!!!!!')
-            #self.duration = 0
-            self.nextTrack()
-            self.slider.setValue(self.player.position())
+        try:
+            if self.player.position() >= self.duration:
+                self.slider.setValue(self.player.position())
+        except TypeError:
+            print('Select a song first!')
         else:
-            pass
+            if self.player.position() >= self.duration:
+                print('Action triggesed!!!!!!!!!!!!')
+                #self.duration = 0
+                self.nextTrack()
+                self.slider.setValue(self.player.position())
+            else:
+                pass
 
 
     #Display current position in MM:SS
