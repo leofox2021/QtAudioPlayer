@@ -1,2 +1,2 @@
-style = fusion
 theme = dark
+style = fusion
