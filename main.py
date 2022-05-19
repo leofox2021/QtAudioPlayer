@@ -3,12 +3,13 @@ from mutagen.id3 import ID3
 from mutagen import File
 from PyQt5 import QtGui, QtCore, uic
 from PyQt5.QtCore import QEvent
-from PyQt5.QtWidgets import QApplication, QMenuBar, QStyleFactory
+from PyQt5.QtWidgets import QApplication, QMenuBar, QStyleFactory, QLabel
 from PyQt5.QtMultimedia import QMediaPlayer
 from PyQt5.Qt import *
 from media_player import MediaPlayer
 from audio_import import AudioFileImport
 from playlist_import import PlaylistImport
+from settings import Settings
 
 
 Form, Window = uic.loadUiType("gui/audio_player.ui")
@@ -17,8 +18,8 @@ Form2, Window2 = uic.loadUiType("gui/playlists.ui")
 
 #Set up window
 app = QApplication(sys.argv)
-x = QStyleFactory.keys()
-print(x)
+available_styles = QStyleFactory.keys()
+print(available_styles)
 #app.setStyle((QStyleFactory.create("Windowsvista")))
 
 
@@ -68,7 +69,10 @@ player = QMediaPlayer() #Player
 
 
 #Menu
-preferences = form.actionPreferences
+menubar = form.menubar
+menufile = form.menuFile
+menuedit = form.menuEdit
+preferences = form.actionPreferences_2
 
 #Variables
 all_songs = []
@@ -94,6 +98,14 @@ def lightTheme():
     update_playlist.setStyleSheet('background: #F0F0F0')
     playlists_button.setStyleSheet('background: #F0F0F0')
     playlist.setStyleSheet('background: #F0F0F0')
+
+    #Light gray / white for button text
+    palette5 = QPalette()
+    palette5.setColor(QPalette.Base, QtGui.QColor('Black'))
+    
+
+    menubar.setPalette(palette5)
+    menuedit.setStyleSheet('selection-color: Gray')
 
     #Icons
     play.setIcon(QtGui.QIcon('icons/play.png'))
@@ -127,6 +139,7 @@ def darkTheme():
     remove_song.setStyleSheet('background: #414142')
     update_playlist.setStyleSheet('background: #414142')
     playlists_button.setStyleSheet('background: #414142')
+    menuedit.setStyleSheet('selection-color: Gray')
 
     #Light gray / white for text
     palette = QPalette()
@@ -140,6 +153,9 @@ def darkTheme():
     palette3 = QPalette()
     palette3.setColor(QPalette.Text, QtGui.QColor('#F0F0F0'))
 
+    palette4 = QPalette()
+    palette4.setColor(QPalette.ButtonText, QtGui.QColor('#242424'))
+
     #Button text
     remove_song.setPalette(palette2)
     clear.setPalette(palette2)
@@ -148,6 +164,9 @@ def darkTheme():
     remove_song.setPalette(palette2)
     update_playlist.setPalette(palette2)
     playlists_button.setPalette(palette2)
+    menubar.setPalette(palette2)
+    menuedit.setPalette(palette2)
+    
 
     #QLabels 
     title.setPalette(palette)
@@ -191,7 +210,6 @@ current_theme = None
 current_style = None
 file = open('config/theme.txt', 'r+', encoding="utf-8") 
 a = file.read()
-print(file.readlines())
 
 #Read theme config file 
 #And set a theme according to it
@@ -201,10 +219,7 @@ elif 'windows' in a:
     current_style = 'Windows'
 elif 'windows_vista' in a:
     current_style = 'windowsvista'
-else:
-    #Default style is always fusion
-    file.write('\n' + 'style = fusion')
-    current_style = 'Fusion'
+
 
 if 'light' in a: 
     lightTheme()
@@ -212,9 +227,7 @@ if 'light' in a:
 elif 'dark' in a:
     darkTheme()
     current_theme = 'dark'
-else:
-    lightTheme()
-    file.write('\n' + 'theme = light')
+
 
 file.close()
 setWidgetStyle(current_style)
@@ -250,11 +263,17 @@ y = AudioFileImport(all_songs, playlist)
 #  Display all playlists in the 'playlists' folder in working directory
 z = PlaylistImport(all_playlists, all_songs, playlist, info_bar)
 
+#Settings class 
+#INCLUDES:
+#A UI window with all the settings 
+#Changing themes 
+#Changing styles
+s = Settings(available_styles)
 
 #Load all existing playlists into GUI
 z.displayPlaylists()
 
-preferences.triggered.connect(lambda: print('Testing'))
+preferences.triggered.connect(s.launch)
 
 #Buttons
 play.clicked.connect(x.playSong)
@@ -284,7 +303,6 @@ slider.valueChanged.connect(x.autoForward)
 slider.valueChanged.connect(x.showTime)
 slider.sliderReleased.connect(x.changePosition)
 slider.sliderMoved.connect(x.showTime)
-
 
 
 #App execution
