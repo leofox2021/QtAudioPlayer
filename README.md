@@ -11,8 +11,7 @@ To launch this player you need:
 4. K-Lite Codec Pack - https://codecguide.com/download_kl.htm
 
 Module installation:
-1. pip install pyqt5
-2. pip install mutagen 
+```pip install pyqt5 mutagen```
 
 Launching app: 
 ``` python main.py```
